@@ -1,0 +1,6 @@
+package net.DynamicJkPandemicMC.Commands;
+
+public class NpcAntiMove
+{
+  public int Structure = 10;
+}
