@@ -1,0 +1,49 @@
+package net.DynamicJkPandemicMC.Handlers;
+
+import net.DynamicJkPandemicMC.Main.SettingsManager;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+public class SignHandler
+  implements Listener
+{
+  int start = 1;
+
+  SettingsManager settings = SettingsManager.getInstance();
+
+  @EventHandler
+  public void onSignChange(SignChangeEvent event) {
+    if ((!(event.getLine(0).equalsIgnoreCase("[pkwins]"))) || (!(event.getPlayer().hasPermission("pk.setup")))) {
+      return;
+    }
+
+    event.setLine(0, "§a[§cP§fK§a]");
+    event.setLine(1, "§0" + ChatColor.UNDERLINE + "Click derecho");
+    event.setLine(2, "§0" + ChatColor.UNDERLINE + "Ver ganadas");
+  }
+
+  @EventHandler
+  public void onInteractEvent(PlayerInteractEvent e)
+  {
+    if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && (e.getClickedBlock().getType().equals(Material.WALL_SIGN))) {
+      Sign s = (Sign)e.getClickedBlock().getState();
+      if (s.getLine(0).equalsIgnoreCase("§a[§cM§fP§a]")) {
+        Player p = e.getPlayer();
+        int Win = this.settings.getPlayerData().getInt(p.getName() + ".Wins");
+        if (Win == 1)
+          p.sendMessage(PrefixHandler.prefix + "§6 Tu haz ganado §a" + Win + " §6tiempo.");
+        else
+          p.sendMessage(PrefixHandler.prefix + "§6 Tu haz ganado §a" + Win + " §6tiempos.");
+      }
+    }
+  }
+}
